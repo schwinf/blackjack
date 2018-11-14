@@ -1,4 +1,4 @@
-var Deck = require('./Deck.js');
+var Deck = require('./deck.js');
 
 // The Duck Tales guys are going to the casino and 
 // they want to simulate 20 games of black jack.  Each
@@ -12,6 +12,7 @@ var Deck = require('./Deck.js');
 // Dealer Hits on 16 and Below
 
 //Simulation Data 
+
 const _ante = 15, _maxRounds = 200;
 var _numberOfDecks = 1, _deck, _round = 1;
 var _players = [new Player('Huey', 200),
