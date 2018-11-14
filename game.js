@@ -1,4 +1,4 @@
-var Deck = require('./deck.js');
+var Deck = require('./Deck.js');
 
 // The Duck Tales guys are going to the casino and 
 // they want to simulate 20 games of black jack.  Each
