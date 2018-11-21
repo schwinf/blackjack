@@ -43,4 +43,3 @@ var _dealer = new Dealer('Dealer');
     dealer will payout or collect antes
 
 }*/
-
