@@ -1,9 +1,15 @@
-function dealer( dealerName ) {
-    this.name = dealerName,
-    this.dealerHand = []
+function Dealer( name, money ) {
+    this.name = name,
+    this.hand = [],
     this.upCard = function() {
-        return this.dealerHand[1];
+        return this.hand[1];
+    }
+    this.hitPlayer = function( deck, player ) {
+        player.hands[0].push(deck.cards.pop());
+    }
+    this.evaluate = function() {
+        console.log('Not Implemented');
     }
 };
 
-module.exports = dealer;
+module.exports = Dealer;

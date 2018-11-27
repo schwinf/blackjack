@@ -29,28 +29,37 @@ function shuffle(deck) {
 function deal(deck, players) {
     for (let i = 0; i < 2; i++) {
         for (let i = 0; i < _players.length; i++) {
-            players[i].playerHand.push(deck.cards.pop());
+            players[i].hands[0].push(deck.cards.pop());
         }
-        _dealer.dealerHand.push(deck.cards.pop());
+        _dealer.hand.push(deck.cards.pop());
     }
 }
 
 buildDeck();
-for (let i = 0; i < _players.length; i++) _pot = _pot + _players[i].anteUp(_ante);
+for (let i = 0; i < _players.length; i++) _players[i].anteUp( _ante )
 _deck = shuffle (_deck);
 deal( _deck, _players);
 
-//_dealer.dealerHand.push(new Card('A', 'black', 'spade'));
-//_dealer.dealerHand.push(new Card('4', 'black', 'club'));
-//_players[0].playerHand.push(new Card('A', 'black', 'club'));
-//_players[0].playerHand.push(new Card('J', 'black', 'club'));
+//_dealer.hand.push(new Card('J', 'black', 'spade'));
+//_dealer.hand.push(new Card('J', 'black', 'club'));
+//_players[0].hands[0].push(new Card('A', 'black', 'club'));
+//_players[0].hands[0].push(new Card('5', 'black', 'club'));
+
+for ( let i = 0; i < _players.length; i++ ) {
+    if ( _dealer.upCard().value === 'A' ) _players[i].insurance()
+    if ( _players[i].evaluate( _dealer.upCard()) == 'W' ) _players[i].surrender( _ante )
+    else while ( _players[i].evaluate( _dealer.upCard()) == 'H' || _players[i].evaluate( _dealer.upCard()) == 'W' )
+             _dealer.hitPlayer( _deck, _players[i] )
+}
+
+//while( _players[0].evaluate( _dealer.upCard()) == 'H' ) _dealer.hitPlayer( _deck, _players[0] )
 
 console.log( 'Dealer','Players','Action');
-console.log( _dealer.upCard().value, '    ', _players[0].playerHand[0].value, _players[0].playerHand[1].value);
-console.log('              ', _players[0].evaluate( _dealer.upCard()));
-console.log('      ', _players[1].playerHand[0].value, _players[1].playerHand[1].value);
-console.log('              ', _players[1].evaluate( _dealer.upCard()));
-console.log('      ', _players[2].playerHand[0].value, _players[2].playerHand[1].value);
-console.log('              ', _players[2].evaluate( _dealer.upCard()));
-console.log('      ', _players[3].playerHand[0].value, _players[3].playerHand[1].value);
-console.log('              ', _players[3].evaluate( _dealer.upCard()));
+console.log( _dealer.upCard().value);
+for (let i = 0; i < 4; i ++) {
+    for (let j = 0; j < _players[i].hands[0].length; j++) {
+        console.log( '        ', _players[i].hands[0][j].value )
+    } 
+    console.log( '              ', _players[i].evaluate( _dealer.upCard()), _players[i].bettingBox,
+                                    _players[i].money, _players[i].hasInsurance );
+}
