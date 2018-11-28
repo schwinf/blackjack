@@ -1,7 +1,7 @@
 //var player = require('./player.js');
 //var _player = new player();
 
-let upCard = dealer.dealerHand[1];
+//let upCard = dealer.dealerHand[1];
 let suits = ['Hearts', 'Clubs', 'Diamonds', 'Spades'];
 let values = ['Ace', 'King', 'Queen', 'Jack', 'Ten', 'Nine', 'Eight', 'Seven', 'Six', 'Five', 'Four', 'Three', 'Two'];
 let deck = [];
@@ -9,19 +9,18 @@ let willHit = false;
 
 
 function createDeck() {
-    for(let suitIdx = 0; suitIdx<suits.length; suitIdx++){
-        for(let valueIdx = 0; valueIdx < values.length; valueIdx++){
-            let card= {
-                suit: suits[suitIdx],
-                value: values[valueIdx]
-            };
-            deck.push(card);
+    for(let c = 0; c < 8; c++){
+        for(let suitIdx = 0; suitIdx<suits.length; suitIdx++){
+            for(let valueIdx = 0; valueIdx < values.length; valueIdx++){
+                let card= {
+                    suit: suits[suitIdx],
+                    value: values[valueIdx]
+                };
+                deck.push(card);
+            }
         }
     }
-    for(let i = 0; i < 8; i++){
-        deck = createDeck();
-        deck.concat(deck);
-    }
+    
     return deck;
 }
 
@@ -130,4 +129,13 @@ function dealer(name){
     }
 };
 
+createDeck();
+shuffleDeck(deck);
+console.log(deck);
+
 module.exports = dealer;
+
+var card = {
+    value = 10,
+    suit = "Heart"
+}

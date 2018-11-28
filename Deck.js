@@ -26,7 +26,7 @@ function shuffleDeck(deck) {
 }
 
 createDeck();
-shuffleDeck();
+//shuffleDeck();
 console.log(deck);
 
 module.exports = Deck;
