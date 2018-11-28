@@ -43,33 +43,35 @@ function Player(name, money){
         this.money = this.money + ante * 0.5;
     },
     this.evaluate = function( dealerUpCard ) {
-        var initialDeal = false;
-        var score = 0;
-        if ( this.hands[0].length === 2 ) initialDeal = true
-        let j = this.getNumericValue( dealerUpCard.value, false );
-        let firstCard = this.getNumericValue( this.hands[0][0].value, false );
-        let secondCard = this.getNumericValue( this.hands[0][1].value, false );
-        if ( initialDeal ) {
-            if ( firstCard === secondCard ) return _pair[firstCard][j]
-            else if ( firstCard === 11 || secondCard === 11 ) {
-                if ( firstCard === 11 ) return _soft[secondCard][j]
-                else return _soft[firstCard][j]
-            
-            } else return _hard[firstCard + secondCard][j];
-        } else {
-            for ( let i = 0; i < this.hands[0].length; i++ ) 
-                score += this.getNumericValue( this.hands[0][i].value, false )
-            if ( score === 21 ) return 'Blackjack'
-            else if ( score > 21 ) {
-                score  = 0;
-                for ( let i = 0; i < this.hands[0].length; i++ ) 
-                    score += this.getNumericValue( this.hands[0][i].value, true )
+        let j = this.getNumericValue( dealerUpCard.value, true );
+
+        if ( this.hands[0].length === 2 )
+            if ( this.hands[0][0].value === this.hands[0][1].value )
+                return _pair[this.getNumericValue( this.hands[0][0].value )][j]
+
+        let isSoft = false;
+        for ( let i = 0; i < this.hands[0].length; i++ )
+            if ( this.hands[0][i].value === 'A' ) {
+                isSoft = true;
+                break;
             }
-            if ( score === 21 ) return 'Blackjack'
-            else if (score > 21 ) return 'Bust'
-            else return _hard[score][j];
+
+        let score = this.scoreHand( isSoft );
+        if ( isSoft ) {
+            if ( score < 21 ) return _soft[score - 11][j]
+            else if (score > 21 ) score = this.scoreHand( false )
         }
+
+        if ( score < 21 ) return _hard[score][j]
+        else if (score > 21 ) return 'Bust'
+        else return 'Win'
     },
+    this.scoreHand = function ( isSoft ) {
+        let score = 0;
+        for ( let i = 0; i < this.hands[0].length; i++ )
+            score += this.getNumericValue( this.hands[0][i].value, isSoft )
+        return score;
+    }
     this.getNumericValue = function ( value, isSoft ) {
         switch ( value ) {
             case 'J':
@@ -78,8 +80,8 @@ function Player(name, money){
                 numericValue = 10;
                 break;
             case 'A':
-                if ( isSoft ) numericValue = 1
-                else numericValue = 11
+                if ( isSoft ) numericValue = 11
+                else numericValue = 1
                 break;
             default:
                 numericValue = parseInt( value );

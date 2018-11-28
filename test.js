@@ -40,10 +40,15 @@ for (let i = 0; i < _players.length; i++) _players[i].anteUp( _ante )
 _deck = shuffle (_deck);
 deal( _deck, _players);
 
-//_dealer.hand.push(new Card('J', 'black', 'spade'));
-//_dealer.hand.push(new Card('J', 'black', 'club'));
-//_players[0].hands[0].push(new Card('A', 'black', 'club'));
-//_players[0].hands[0].push(new Card('5', 'black', 'club'));
+//_dealer.hand.pop();
+//_dealer.hand.push(new Card('7', 'black', 'club'));
+//_players[0].hands[0].pop();
+//_players[0].hands[0].pop();
+//_players[0].hands[0].push(new Card('4', 'black', 'heart'));
+//_players[0].hands[0].push(new Card('2', 'black', 'club'));
+
+console.log( 'Dealer','Players','Action');
+console.log( _dealer.upCard().value);
 
 for ( let i = 0; i < _players.length; i++ ) {
     if ( _dealer.upCard().value === 'A' ) _players[i].insurance()
@@ -52,9 +57,8 @@ for ( let i = 0; i < _players.length; i++ ) {
              _dealer.hitPlayer( _deck, _players[i] )
 }
 
-console.log( 'Dealer','Players','Action');
-console.log( _dealer.upCard().value);
-for (let i = 0; i < 4; i ++) {
+for (let i = 0; i < _players.length; i ++) {
+    //console.log('Player',i);
     for (let j = 0; j < _players[i].hands[0].length; j++) {
         console.log( '        ', _players[i].hands[0][j].value )
     } 
