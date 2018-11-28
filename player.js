@@ -44,11 +44,11 @@ function Player(name, money){
     },
     this.evaluate = function( dealerUpCard ) {
         var initialDeal = false;
-        var extraValue = 0;
+        var score = 0;
         if ( this.hands[0].length === 2 ) initialDeal = true
-        let j = this.getNumericValue( dealerUpCard.value );
-        let firstCard = this.getNumericValue( this.hands[0][0].value );
-        let secondCard = this.getNumericValue( this.hands[0][1].value );
+        let j = this.getNumericValue( dealerUpCard.value, false );
+        let firstCard = this.getNumericValue( this.hands[0][0].value, false );
+        let secondCard = this.getNumericValue( this.hands[0][1].value, false );
         if ( initialDeal ) {
             if ( firstCard === secondCard ) return _pair[firstCard][j]
             else if ( firstCard === 11 || secondCard === 11 ) {
@@ -57,14 +57,20 @@ function Player(name, money){
             
             } else return _hard[firstCard + secondCard][j];
         } else {
-            for ( let i = 2; i < this.hands[0].length; i++ ) 
-                extraValue += this.getNumericValue(this.hands[0][i].value)
-            if ( firstCard + secondCard + extraValue === 21 ) return 'Blackjack'
-            else if (firstCard + secondCard + extraValue > 21 ) return 'Bust'
-            else return _hard[firstCard + secondCard + extraValue][j];
+            for ( let i = 0; i < this.hands[0].length; i++ ) 
+                score += this.getNumericValue( this.hands[0][i].value, false )
+            if ( score === 21 ) return 'Blackjack'
+            else if ( score > 21 ) {
+                score  = 0;
+                for ( let i = 0; i < this.hands[0].length; i++ ) 
+                    score += this.getNumericValue( this.hands[0][i].value, true )
+            }
+            if ( score === 21 ) return 'Blackjack'
+            else if (score > 21 ) return 'Bust'
+            else return _hard[score][j];
         }
     },
-    this.getNumericValue = function ( value ) {
+    this.getNumericValue = function ( value, isSoft ) {
         switch ( value ) {
             case 'J':
             case 'Q':
@@ -72,26 +78,14 @@ function Player(name, money){
                 numericValue = 10;
                 break;
             case 'A':
-                numericValue = 11;
+                if ( isSoft ) numericValue = 1
+                else numericValue = 11
                 break;
             default:
                 numericValue = parseInt( value );
         }
         return numericValue;
     }
-    /*this.evaluate = function( dealerUpCard ){
-        let j = this.getNumericValue( dealerUpCard.value );
-        let firstCard = this.getNumericValue( this.hands[0][0].value );
-        let secondCard = this.getNumericValue( this.hands[0][1].value );
-
-        if ( firstCard === secondCard ) return _pair[firstCard][j]
-
-        else if ( firstCard === 'A' || secondCard === 'A' ) {
-            if ( firstCard === 'A') return _soft[secondCard][j]
-            else return _soft[firstCard][j]
-        
-        } else return _hard[firstCard + secondCard][j];
-    },*/
 }
 
 module.exports = Player;

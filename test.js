@@ -19,7 +19,7 @@ function buildDeck() {
 }
 
 function shuffle(deck) {
-    for (let i = deck.cards.length - 2; i > 0; i--) {
+    for (let i = deck.cards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i));
         [deck.cards[i], deck.cards[j]] = [deck.cards[j], deck.cards[i]];
     }
@@ -52,14 +52,11 @@ for ( let i = 0; i < _players.length; i++ ) {
              _dealer.hitPlayer( _deck, _players[i] )
 }
 
-//while( _players[0].evaluate( _dealer.upCard()) == 'H' ) _dealer.hitPlayer( _deck, _players[0] )
-
 console.log( 'Dealer','Players','Action');
 console.log( _dealer.upCard().value);
 for (let i = 0; i < 4; i ++) {
     for (let j = 0; j < _players[i].hands[0].length; j++) {
         console.log( '        ', _players[i].hands[0][j].value )
     } 
-    console.log( '              ', _players[i].evaluate( _dealer.upCard()), _players[i].bettingBox,
-                                    _players[i].money, _players[i].hasInsurance );
+    console.log( '              ', _players[i].evaluate( _dealer.upCard()));
 }
