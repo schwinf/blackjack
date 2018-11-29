@@ -1,6 +1,4 @@
-
 //  Adapted from https://en.wikipedia.org/wiki/Blackjack#Basic_strategy
-//      -added two rows: hard[][21] and soft[][10] to evaluate Naturals
 //  S = stand, H = hit, L = split, N = Natural, W = surrender (if not allowed, then hit)
 //  Dh = double (if not allowed, then hit), Ds = double (if not allowed, then stand)
 function BasicStrategy() {

@@ -1,5 +1,5 @@
-//var player = require('./player.js');
-//var _player = new player();
+var player = require('./player.js');
+var _player = new player();
 
 //let upCard = dealer.dealerHand[1];
 let suits = ['Hearts', 'Clubs', 'Diamonds', 'Spades'];
@@ -36,13 +36,9 @@ function dealer(name){
     this.hasNatural = false,
     this.dealerHand =[],
 
-    this.deal = function( _player, numberOfCards ){
-        for(let i = 0; i < numberOfCards; i++){
-            //_player['playerHand'].push(getNextCard());
-            _player.hands[0].push(this.getNextCard());
-        }
-        if (numberOfCards == 2)
-            this.dealerHand.push(this.getNextCard());
+    this.deal = function( player ){
+        if (player) player.hands[0].push(this.getNextCard());
+        else this.dealerHand.push(this.getNextCard());
     },
 
     this.getNextCard = function() {
@@ -85,22 +81,18 @@ function dealer(name){
             }
         }
     },
-
-    this.evaluateDealer = function(cardArray){
+    this.evaluateDealer = function( ) {
         let score = 0;
-        let hasAce = false;
-        for(let i = 0; i < cardArray.length; i++){
-            let card = cardArray[i];
-            score += getCardNumericValue(card);
-            if(card.value === "Ace"){
-                hasAce = true;
-            }
+        let isSoft = false;
+
+        for ( let i = 0; i < this.dealerHand.length; i++ ) {
+            if ( this.dealerHand[i].value === 'Ace' ) isSoft = true
+            score += this.getCardNumericValue(this.dealerHand[i]);
         }
-        if(score <= 17){
-            dealer['dealerHand'].push(getNextCard());
-        } else if(hasAce && score === 21){
-            hasNatural = true;
-        }
+
+        if ( isSoft ) score += 10
+
+        return score;
     },
 
     this.evaluateRound = function(playerScore, dealerScore){
@@ -113,7 +105,6 @@ function dealer(name){
     },
 
     this.getUpCard = function(){
-        //let upCard = this.dealerHand[1];
         return this.dealerHand[1];
     },
 
@@ -128,24 +119,5 @@ function dealer(name){
 
 createDeck();
 shuffleDeck(deck);
-//console.log(deck);
 
 module.exports = dealer;
-
-//var card = {
-//    value = 10,
-//    suit = "Heart"
-//}
-/*function Dealer( name, money ) {
-    this.name = name,
-    this.hand = [],
-    this.upCard = function() {
-        return this.hand[1];
-    }
-    this.hitPlayer = function( deck, player ) {
-        player.hands[0].push(deck.cards.pop());
-    }
-    this.evaluate = function() {
-        console.log('Not Implemented');
-    }
-};*/

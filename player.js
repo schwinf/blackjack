@@ -1,9 +1,11 @@
 var BasicStrategy = require('./BasicStrategy.js');
-var _basicStrategy = new BasicStrategy();
+var _Strategy = new BasicStrategy();
+//var Hs17Strategy = require('./Hs17Strategy.js');
+//var _Strategy = new Hs17Strategy();
 
-var _pair = _basicStrategy.pair;
-var _hard = _basicStrategy.hard;
-var _soft = _basicStrategy.soft;
+var _pair = _Strategy.pair;
+var _hard = _Strategy.hard;
+var _soft = _Strategy.soft;
 
 function Player(name, money){
     this.name = name,
