@@ -47,11 +47,11 @@ function Player(name, money){
 
         if ( this.hands[0].length === 2 )
             if ( this.hands[0][0].value === this.hands[0][1].value )
-                return _pair[this.getNumericValue( this.hands[0][0].value )][j]
+                return _pair[this.getNumericValue( this.hands[0][0].value, true )][j]
 
         let isSoft = false;
         for ( let i = 0; i < this.hands[0].length; i++ )
-            if ( this.hands[0][i].value === 'A' ) {
+            if ( this.hands[0][i].value === 'Ace' ) {
                 isSoft = true;
                 break;
             }
@@ -73,18 +73,44 @@ function Player(name, money){
         return score;
     }
     this.getNumericValue = function ( value, isSoft ) {
+        let numericValue = 0;
         switch ( value ) {
-            case 'J':
-            case 'Q':
-            case 'K':
+            case 'Two':
+                numericValue = 2;
+                break;
+            case 'Three':
+                numericValue = 3;
+                break;
+            case 'Four':
+                numericValue = 4;
+                break;
+            case 'Five':
+                numericValue = 5;
+                break;
+            case 'Six':
+                numericValue = 6;
+                break;
+            case 'Seven':
+                numericValue = 7;
+                break;
+            case 'Eight':
+                numericValue = 8;
+                break;
+            case 'Nine':
+                numericValue = 9;
+                break;
+            case 'Ten':
+            case 'Jack':
+            case 'Queen':
+            case 'King':
                 numericValue = 10;
                 break;
-            case 'A':
+            case 'Ace':
                 if ( isSoft ) numericValue = 11
                 else numericValue = 1
                 break;
             default:
-                numericValue = parseInt( value );
+                break;
         }
         return numericValue;
     }
