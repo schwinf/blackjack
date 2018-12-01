@@ -36,8 +36,8 @@ function dealer(name){
     this.hasNatural = false,
     this.dealerHand =[],
 
-    this.deal = function( player ){
-        if (player) player.hands[0].push(this.getNextCard());
+    this.deal = function( player, hand ){
+        if (player) player.hands[hand].push(this.getNextCard());
         else this.dealerHand.push(this.getNextCard());
     },
 
@@ -70,16 +70,19 @@ function dealer(name){
         }
     },
 
-    this.evaluate = function(cardArray){
+    this.scoreHand = function( hand ){
         let score = 0;
-        let hasAce = false;
-        for(let i = 0; i < cardArray.length; i++){
-            let card = cardArray[i];
-            score += getCardNumericValue(card);
-            if(card.value === "Ace"){
-                hasAce = true;
-            }
+        let isSoft = false;
+        for( let i = 0; i < hand.length; i++ ){
+            if ( hand[i].value === 'Ace' ) isSoft = true
+            score += this.getCardNumericValue(hand[i]);
         }
+        if ( isSoft ) {
+            score += 10;
+            if ( score > 21 ) score -=10;
+            else if ( score === 21 && hand.length === 2 ) score = 'Blackjack'
+        }
+        return score;
     },
     this.evaluateDealer = function( ) {
         let score = 0;
@@ -89,9 +92,11 @@ function dealer(name){
             if ( this.dealerHand[i].value === 'Ace' ) isSoft = true
             score += this.getCardNumericValue(this.dealerHand[i]);
         }
-
-        if ( isSoft ) score += 10
-
+        if ( isSoft ) {
+            score += 10;
+            if ( score === 21 ) {}
+            else if ( score > 17 ) score -=10;
+        }
         return score;
     },
 
