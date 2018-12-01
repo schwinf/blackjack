@@ -17,51 +17,75 @@ for (let j = 0; j < 2; j++ ) {
     }
 }
 
-//_dealer.dealerHand.pop();
-//_dealer.dealerHand.push(new Card('Ace', 'red', 'Diamonds'));
+// testing split
 //_players[0].hands[0].pop();
-//_players[0].hands[0].push(new Card('Eight', 'red', 'Hearts'));
+//_players[0].hands[0].pop();
+//_players[0].hands[0].push(new Card( 'Eight' ));
+//_players[0].hands[0].push(new Card( 'Eight' ));
 
-play = function( i, hand ) {
+play = function( i, handIndex ) {
     // insurance not recommended for long run
-    if ( _dealer.getUpCard().value === 'Ace' ) {
-        _players[i].insurance();
+    if ( _dealer.getUpCard().value === 'Ace' ) _players[i].insurance( )
+    let playerDecision = '';
+
+    let handSize = _players[i].hands[handIndex].length;
+    if ( handSize > 1 ) {
+        playerDecision = _players[i].evaluate( _dealer.getUpCard(), handIndex );
     }
-    // surrender
-    if ( _players[i].evaluate( _dealer.getUpCard(), hand ) === 'W' ) {
-        _players[i].surrender( _ante );
+    switch ( handSize ) {
+        case 1:         // hand was split, needs another card before evaluating
+            _dealer.deal( _players[i], handIndex );  
+            playerDecision = _players[i].evaluate( _dealer.getUpCard(), handIndex );
+            break;
+        case 2:         // can only double down on first two cards
+            if ( playerDecision.charAt( 0 ) === 'D' ) {
+                playerDecision = playerDecision.charAt( 0 );
+            }
+            break;
+        case 3:         // double down not allowed, so get the second character in 'Dh' or 'Ds' for decision
+            if ( playerDecision.charAt( 0 ) === 'D' ) {
+                playerDecision = playerDecision.charAt( 1 ).toUpperCase( );
+            }
+            break;
+        default:
+            break;
     }
-    // double down only deal one card, and only after first two cards are dealt (only first char of evaluate())
-    else if ( _players[i].evaluate( _dealer.getUpCard(), hand ).charAt(0) === 'D' ) {
-        _dealer.deal( _players[i], hand );
-    } // TODO: correctly implement re-splitting
-    else if ( _players[i].evaluate( _dealer.getUpCard(), hand ) === 'L' ) {
-        _players[i].split( hand );
-        _dealer.deal( _players[i], hand );
-        _dealer.deal( _players[i], hand + 1 );
-        for ( let k = hand; k < 2; k++ ) {
-            play( i, k );
-        }
-    }
-    else {
-        while ( _players[i].evaluate( _dealer.getUpCard(), hand ) === 'H'
-                 || _players[i].evaluate( _dealer.getUpCard(), hand ) === 'W'
-                 || _players[i].evaluate( _dealer.getUpCard(), hand ) === 'Dh') {
-                    _dealer.deal( _players[i], hand );
-                 }
+
+    switch ( playerDecision ) {
+        case 'W':       // surrender not advised for basic strategy in long run
+            _players[i].surrender( _ante );
+            break;
+        case 'D':       // double down--only one more card to be dealt
+            _dealer.deal( _players[i], handIndex );
+            break;  
+        case 'L':       // split hand, deal on current hand until played out
+            _players[i].split( handIndex );
+            _dealer.deal( _players[i], handIndex );
+            while ( handIndex < _players[i].hands.length ) {
+                play( i, handIndex++ );
+            }
+            break;
+        case 'H':       // surrender (W) not allowed on third card, so hit; also 'Dh' is hit with > 2 cards 
+            while ( _players[i].evaluate( _dealer.getUpCard(), handIndex ) === 'H' || 
+                    _players[i].evaluate( _dealer.getUpCard(), handIndex ) === 'W' ||
+                    _players[i].evaluate( _dealer.getUpCard(), handIndex ) === 'Dh') {
+                        _dealer.deal( _players[i], handIndex );
+                    }
+            break;
+        default:
+            break;
     }
 }
 //start of game play
 for ( let i = 0; i < _players.length; i++ ) {
-    let hand = 0;
-    // The play() function is recursive for split hands, but it only correctly plays the original 
-    // and first split hands.
-    play( i, hand ); 
+    
+    let handIndex = 0;
+    play( i, handIndex ); 
 
     //The dealer hand will not be completed if all players have either busted or received blackjack
     var dealerComplete = false;
     for ( let j = 0; j < _players.length; j++ ) {
-        let playerDisposition = _players[j].evaluate( _dealer.getUpCard(), hand );
+        let playerDisposition = _players[j].evaluate( _dealer.getUpCard(), handIndex );
         if ( playerDisposition != 'Win' && playerDisposition != 'Bust' && playerDisposition != 'W') {
             dealerComplete = true;
         }

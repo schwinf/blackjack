@@ -36,6 +36,10 @@ function dealer(name){
     this.hasNatural = false,
     this.dealerHand =[],
 
+    this.stack = function( card ) {
+        deck.push( card );
+    },
+
     this.deal = function( player, hand ){
         if (player) player.hands[hand].push(this.getNextCard());
         else this.dealerHand.push(this.getNextCard());
@@ -43,6 +47,7 @@ function dealer(name){
 
     this.getNextCard = function() {
         return deck.shift();
+        //return deck.pop();
     },
 
     this.getCardNumericValue = function(card){

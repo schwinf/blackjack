@@ -29,7 +29,7 @@ function Player(name, money){
         this.anteUp(ante);
         this.hands.push([]);
         var secondCard = this.hands[hand].pop();
-        this.hands[hand+1].push(secondCard);
+        this.hands[this.hands.length - 1].push(secondCard);
         this.hasSplit = true;
     },
     this.doubleDown = function(hand, card, ante){
@@ -116,7 +116,6 @@ function Player(name, money){
                 else numericValue = 1
                 break;
             default:
-                break;
         }
         return numericValue;
     }
