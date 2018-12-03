@@ -3,7 +3,7 @@ var player = require('./player.js');
 var dealer = require('./dealer.js');
 var Card = require('./Card.js');
 
-const _ante = 15, _maxRounds = 20, _startingMoneyAmount = 20;
+const _ante = 15, _maxRounds = 20, _startingMoneyAmount = 50;
 var _numberOfDecks = 1, _deck = deck, _round = 1, _pot = 0;
 var _players = [new player('Huey', _startingMoneyAmount),
                 new player('Dewey', _startingMoneyAmount),
@@ -25,6 +25,8 @@ deal = function(){
 //_players[0].hands[0].pop();
 //_players[0].hands[0].push(new Card( 'Eight' ));
 //_players[0].hands[0].push(new Card( 'Eight' ));
+
+
 
 play = function( i, handIndex ) {
     // insurance not recommended for long run
@@ -125,7 +127,10 @@ for ( let rounds = 1; (rounds <= _maxRounds) && (_players.length > 0); rounds++)
             }
         }
         for ( w = 0; w < _players[i].hands.length; w++ ) {
-            if((_dealer.scoreHand( _players[i].hands[w] ) >= dealerScore && (_dealer.scoreHand( _players[i].hands[w] ) <= 21)) || ((dealerScore > 21) && ((_dealer.scoreHand( _players[i].hands[w] ) <= 21 ))) || _dealer.scoreHand( _players[i].hands[w] == "Blackjack")){
+            if( (_dealer.scoreHand( _players[i].hands[w] ) === dealerScore) && dealerScore <= 21) {
+                _players[i].money += _ante;
+            }
+            else if((_dealer.scoreHand( _players[i].hands[w] ) >= dealerScore && (_dealer.scoreHand( _players[i].hands[w] ) <= 21)) || ((dealerScore > 21) && ((_dealer.scoreHand( _players[i].hands[w] ) <= 21 ))) || _dealer.scoreHand( _players[i].hands[w] == "Blackjack")){
                 if(_players[i].isDoubleDown){
                     _dealer.payOut(_players[i], _ante);
                     _players[i].isDoubleDown = false;
