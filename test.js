@@ -3,7 +3,7 @@ var player = require('./player.js');
 var dealer = require('./dealer.js');
 var Card = require('./Card.js');
 
-const _ante = 15, _maxRounds = 20, _startingMoneyAmount = 50;
+const _ante = 15, _maxRounds = 20, _startingMoneyAmount = 40;
 var _numberOfDecks = 1, _deck = deck, _round = 1, _pot = 0;
 var _players = [new player('Huey', _startingMoneyAmount),
                 new player('Dewey', _startingMoneyAmount),
@@ -25,7 +25,6 @@ deal = function(){
 //_players[0].hands[0].pop();
 //_players[0].hands[0].push(new Card( 'Eight' ));
 //_players[0].hands[0].push(new Card( 'Eight' ));
-
 
 
 play = function( i, handIndex ) {
@@ -65,10 +64,12 @@ play = function( i, handIndex ) {
             _players[i].isDoubleDown = true;
             break;  
         case 'L':       // split hand, deal on current hand until played out
-            _players[i].split( handIndex, _ante );
-            _dealer.deal( _players[i], handIndex );
-            while ( handIndex < _players[i].hands.length ) {
-                play( i, handIndex++ );
+            if(_players[i].money < (_ante * 2)){
+                _players[i].split( handIndex, _ante );
+                _dealer.deal( _players[i], handIndex );
+                while ( handIndex < _players[i].hands.length ) {
+                    play( i, handIndex++ );
+                }
             }
             break;
         case 'H':       // surrender (W) not allowed on third card, so hit; also 'Dh' is hit with > 2 cards 
@@ -128,7 +129,13 @@ for ( let rounds = 1; (rounds <= _maxRounds) && (_players.length > 0); rounds++)
         }
         for ( w = 0; w < _players[i].hands.length; w++ ) {
             if( (_dealer.scoreHand( _players[i].hands[w] ) === dealerScore) && dealerScore <= 21) {
-                _players[i].money += _ante;
+                if(_players[i].hasBlackJack){
+                    _dealer.payOut(_players[i], _ante);
+                    _player.hasBlackJack = false;
+                }
+                else {
+                    _players[i].money += _ante;
+                }
             }
             else if((_dealer.scoreHand( _players[i].hands[w] ) >= dealerScore && (_dealer.scoreHand( _players[i].hands[w] ) <= 21)) || ((dealerScore > 21) && ((_dealer.scoreHand( _players[i].hands[w] ) <= 21 ))) || _dealer.scoreHand( _players[i].hands[w] == "Blackjack")){
                 if(_players[i].isDoubleDown){
@@ -214,7 +221,10 @@ for ( let rounds = 1; (rounds <= _maxRounds) && (_players.length > 0); rounds++)
     for ( let y = 0; y < _players.length; y++ ) {
         var index = _players.indexOf(_players[y]);
         if( _players[y].money < _ante){
-            _players.splice(index, 1);
+            if(index != -1){
+                _players.splice(index, 1);
+                --y;
+            }
         }
     }
     for ( let z = 0; z < _players.length; z++ ) {

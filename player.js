@@ -14,7 +14,8 @@ function Player(name, money){
     this.hasInsurance = false,
     this.isDoubleDown = false,
     this.hands = [[]],
-    this.hasSplit = false;
+    this.hasSplit = false,
+    this.hasBlackJack = false,
     this.hit =  function(hand,card){
         this.hands[hand].push(card);
     },

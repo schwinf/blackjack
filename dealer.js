@@ -85,7 +85,7 @@ function dealer(name){
         if ( isSoft ) {
             score += 10;
             if ( score > 21 ) score -=10;
-            //else if ( score === 21 && hand.length === 2 ) score = 'Blackjack'
+            else if ( score === 21 && hand.length === 2 ) _player.hasBlackJack = true;
         }
         return score;
     },
